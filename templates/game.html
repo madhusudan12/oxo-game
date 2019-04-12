@@ -1,0 +1,163 @@
+<html>
+<head>
+    <title>
+        Tic Tac Toe
+    </title>
+
+    <style>
+        table{
+            display: table;
+            border-collapse: separate;
+            border-spacing: 2px;
+            border-width: thick;
+            border-color: gray;
+        }
+        td{
+           background-color: #b5dcb3;
+           height: 50px;
+           width: 50px;
+           text-align: center;
+        }
+        input{
+           background-color: #b5dcb3;
+           height: 50px;
+           width: 50px;
+           text-align: center;
+           font-size: 20px;
+           font-style: oblique;
+        }
+    </style>
+    <script>
+        var arr = [];
+        var count = 0;
+        var grid = [-1,-2,-3,-4,-5,-6,-7,-9,-10];
+        var maxMoves = 0;
+        function refreshGame(){
+        	arr=[];
+            grid=[-1,-2,-3,-4,-5,-6,-7,-8,-9];
+            count=0;
+            for(var i=0;i<9;i++)
+                document.getElementById(i+1).value="";
+        }
+        function refresh(){
+            var seconds = 6;
+            var x = setInterval(function() {
+                seconds = seconds - 1;
+                document.getElementById("time").innerHTML = 'new game starts in ' + seconds + ' seconds';
+                    if (seconds <= 0) {
+                        clearInterval(x);
+                        location.reload();
+                    }
+                }, 1000);
+
+        }
+        function undo(){
+            if(count >= 0){
+                var i = arr[count - 1] ;
+                document.getElementById(i).value = "";
+                grid[i - 1] = -(i-1);
+                count--;
+            }
+        }
+
+        function redo(){
+            if(count<maxMoves){
+                if(count %2 == 0){
+                    document.getElementById(arr[count]).value = "X";
+                }
+                else{
+                    document.getElementById(arr[count]).value = "O";
+                }
+                count++;
+                var i = arr[count - 1];
+                grid[i - 1] = (count - 1) % 2;
+            }
+        }
+        function gameOver(){
+            if((grid[0] == grid[1] && grid[0]== grid[2]) || (grid[3] == grid[4] && grid[3]== grid[5]) || (grid[6] == grid[7] && grid[6]== grid[8]))
+                return true;
+            if((grid[0] == grid[3] && grid[0]== grid[6]) || (grid[1] == grid[4] && grid[1] == grid[7]) || (grid[2] == grid[5] && grid[2] == grid[8]))
+                return true;
+            if((grid[0] == grid[4] && grid[0]== grid[8]) || (grid[2] == grid[4] && grid[2]== grid[6]))
+                return true;
+            return false;
+        }
+        function isValidMove(id){
+            var i;
+            for(i=0;i<count;i++){
+                if(id == arr[i])
+                    return false;
+            }
+            return true
+        }
+        function makeMove(){
+            var activeElement = document.activeElement;
+            if(isValidMove(activeElement.id) == true && gameOver() == false){
+                arr[count] = activeElement.id;
+                if(count %2 == 0){
+                    document.getElementById(activeElement.id).value = "X";
+                }
+                else{
+                    document.getElementById(activeElement.id).value = "O";
+                }
+                grid[activeElement.id  - 1] = count % 2;
+                count++;
+                maxMoves = count;
+            }
+            if(gameOver() == true || count == 9){
+                if(gameOver() == true){
+                    if(count %2 != 0)
+                        document.getElementById("status").innerHTML = "Player 1 won the game.";
+                    else
+                        document.getElementById("status").innerHTML = "Player 2 won the game.";
+                }
+                else{
+                    document.getElementById("status").innerHTML = "Game over. Match Draw";
+                }
+                refresh();
+                count = 0;
+                arr = [];
+                grid = [-1,-2,-3,-4,-5,-6,-7,-9,-10];
+            }
+        }
+    </script>
+</head>
+<body>
+    <center>
+    <h1>Tic-Tac-Toe</h1>
+    <hr/>
+    <table>
+        <tr>
+            <td><input type="button" id="1" value="" onclick="makeMove()"></td>
+            <td><input type="button" id="2" value="" onclick="makeMove()"></td>
+            <td><input type="button" id="3" value="" onclick="makeMove()"></td>
+        </tr>
+        <tr>
+            <td><input type="button" id="4" value="" onclick="makeMove()"></td>
+            <td><input type="button" id="5" value="" onclick="makeMove()"></td>
+            <td><input type="button" id="6" value="" onclick="makeMove()"></td>
+        </tr7>
+        <tr>
+            <td><input type="button" id="7" value="" onclick="makeMove()"></td>
+            <td><input type="button" id="8" value="" onclick="makeMove()"></td>
+            <td><input type="button" id="9" value="" onclick="makeMove()"></td>
+        </tr>
+    </table>
+    <br><br><br>
+    <input type="button" style="color:white;background-color:#175963;height:30px;width:90px" id="bt" value="undo" onclick="undo()">
+
+    <input type="button" style="color:white;background-color:#175963;height:30px;width:90px" id="bt" value="redo" onclick="redo()">
+    <br><br><br>
+    <input type="button" style="color:white;background-color:#175963;height:30px;width:150px" id="bt" value="New Game" onclick="refreshGame()">
+    <br><br><br>
+
+    <p id="status">
+    </p>
+    <br><br>
+    <p id="time">
+    </p>
+</center>
+<br/><br/><br/><br/>
+<b>Created by Madhusudan Chowdary</b>
+</body>
+</html>
